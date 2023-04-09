@@ -33,9 +33,12 @@ def register_error_handlers(app):
 
 
 def register_request_filter(app):
+    """All routes that require authorization should be placed in here"""
+    request_paths = []
+
     @app.before_request
     def filter_specific_routes():
-        if request.path == "/users/all":
+        if request.path in request_paths:
             validate(app.config)
 
 
