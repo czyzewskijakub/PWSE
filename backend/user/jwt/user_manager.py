@@ -8,11 +8,12 @@ from backend.user.models import User
 
 
 def authorize(email, password):
-    user = User.find_by_email(email)
-    if user.check_password(password):
-        token = jwt.encode({"user": email,
-                            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=config.EXP_TIME_MIN)},
-                           config.SECRET_KEY, algorithm=config.ALGORITHM)
+    user = User.find_by_email(email=email)
+    if user.check_password(password=password):
+        token = jwt.encode(payload={"user": email,
+                                    "exp": datetime.datetime.utcnow() + datetime.timedelta(
+                                        config.EXP_TIME_MIN)},
+                           key=config.SECRET_KEY, algorithm=config.ALGORITHM)
         return {
             "message": "Successfully logged in",
             "token": token,
@@ -23,14 +24,12 @@ def authorize(email, password):
 
 
 def register(email, password):
-    if User.find_by_email(email) is not None:
+    if User.find_by_email(email=email) is not None:
         return {"error": "Email is taken", "status_code": 409}
 
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
         return {"error": "Incorrect email", "status_code": 409}
 
-    user = User(email, password)
+    user = User(email=email, password=password)
     user.save()
     return {"message": "Successfully created user", "status_code": 201}
-
-

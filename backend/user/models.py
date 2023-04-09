@@ -12,13 +12,13 @@ class User(UserMixin, db.Model):
 
     def __init__(self, email, password):
         self.email = email
-        self.set_password(password)
+        self.set_password(password=password)
 
     def set_password(self, password):
-        self.password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        self.password = bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt())
 
     def check_password(self, password):
-        return bcrypt.checkpw(password.encode("utf-8"), self.password)
+        return bcrypt.checkpw(password=password.encode("utf-8"), hashed_password=self.password)
 
     @classmethod
     def find_all(cls):
@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
 
     @classmethod
     def get_by_id(cls, record_id):
-        return cls.query.get(record_id)
+        return cls.query.get(record_id=record_id)
 
     @classmethod
     def find_by_email(cls, email):

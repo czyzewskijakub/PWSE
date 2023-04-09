@@ -11,9 +11,9 @@ def login():
     email: str = req_body["email"]
     password: str = req_body["password"]
 
-    res = user_manager.authorize(email, password)
+    res = user_manager.authorize(email=email, password=password)
 
-    return jsonify({key: value for key, value in list(res.items())[:-1]}), res["status_code"]
+    return jsonify_response(res)
 
 
 @blueprint.route("/register", methods=["POST"])
@@ -22,7 +22,10 @@ def register():
     email: str = req_body["email"]
     password: str = req_body["password"]
 
-    res = user_manager.register(email, password)
+    res = user_manager.register(email=email, password=password)
 
-    return jsonify({key: value for key, value in list(res.items())[:-1]}), res["status_code"]
+    return jsonify_response(res)
 
+
+def jsonify_response(response):
+    return jsonify({key: value for key, value in list(response.items())[:-1]}), response["status_code"]
