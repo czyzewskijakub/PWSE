@@ -1,18 +1,8 @@
 version: '3'
 services:
-  db:
-    container_name: database
-    image: nouchka/sqlite3:latest
-    ports:
-      - '5000:5000'
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./db/:/db/test.db
   backend:
     container_name: backend
     build:
       dockerfile: Dockerfile
     ports:
-      - '3000:3000'
-    depends_on: [db]
+      - '5000:5000'
