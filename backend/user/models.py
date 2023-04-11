@@ -8,11 +8,12 @@ class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, unique=False, nullable=False)
+    password = db.Column(db.String, unique=False, nullable=True)
+    account_source = db.Column(db.String, unique=False, nullable=False)
 
-    def __init__(self, email, password):
+    def __init__(self, email, account_source):
         self.email = email
-        self.set_password(password=password)
+        self.account_source = account_source
 
     def set_password(self, password):
         self.password = bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt())

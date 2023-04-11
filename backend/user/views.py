@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, redirect
 from .jwt import user_manager
+from .google import google_user_manager
 
 blueprint = Blueprint("user", __name__, url_prefix="/users")
 
@@ -13,6 +13,18 @@ def login():
 
     res = user_manager.authorize(email=email, password=password)
 
+    return jsonify_response(res)
+
+
+@blueprint.route("/login/google")
+def login_via_facebook():
+    authorization_url: str = google_user_manager.google_login()
+    return redirect(authorization_url)
+
+
+@blueprint.route("/callback")
+def callback():
+    res = google_user_manager.callback_from_google_login()
     return jsonify_response(res)
 
 
