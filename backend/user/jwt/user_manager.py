@@ -21,7 +21,6 @@ def authorize(email, password):
 
 
 def register(email, password):
-    print(password)
     if User.find_by_email(email=email) is not None:
         return {"error": "Email is taken", "status_code": 409}
     elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):

@@ -1,3 +1,6 @@
+import os.path
+import pathlib
+
 import cachecontrol
 import google.auth.transport
 import requests
@@ -10,7 +13,7 @@ from backend import settings
 from ..jwt import user_manager
 
 
-client_secrets_file = settings.CLIENT_SECRETS_FILE
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
