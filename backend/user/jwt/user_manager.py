@@ -1,15 +1,15 @@
-import re
-
 import backend.settings as config
 import datetime
 import jwt
+import re
 
 from backend.user.models import User
 
 
 def authorize(email, password):
     user = User.find_by_email(email=email)
-    if user.check_password(password=password):
+
+    if user is not None and user.check_password(password=password):
         token = jwt.encode(payload={"user": email,
                                     "exp": datetime.datetime.utcnow() + datetime.timedelta(
                                         config.EXP_TIME_MIN)},
