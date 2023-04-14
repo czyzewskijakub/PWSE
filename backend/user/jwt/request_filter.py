@@ -1,4 +1,5 @@
 import jwt
+
 from flask import request, abort
 
 

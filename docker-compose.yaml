@@ -4,5 +4,7 @@ services:
     container_name: backend
     build:
       dockerfile: Dockerfile
+    environment:
+      OAUTHLIB_INSECURE_TRANSPORT: 1
     ports:
       - '5000:5000'

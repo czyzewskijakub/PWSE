@@ -1,7 +1,8 @@
 """Main app file"""
+import os
+
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import HTTPException
-
 from backend import user
 from backend.user.jwt.request_filter import validate
 from backend.extensions import db
@@ -44,4 +45,6 @@ def register_request_filter(app):
 
 if __name__ == "__main__":
     main_app = create_app()
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = main_app.config["OAUTHLIB_INSECURE_TRANSPORT"]
+
     main_app.run(debug=True)
