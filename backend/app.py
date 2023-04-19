@@ -6,6 +6,7 @@ from werkzeug.exceptions import HTTPException
 from backend import user
 from backend.user.jwt.request_filter import validate
 from backend.extensions import db
+from backend.ai.views import *
 
 
 def create_app(config_object="settings"):
@@ -15,7 +16,6 @@ def create_app(config_object="settings"):
     register_blueprints(app=app)
     register_error_handlers(app=app)
     register_request_filter(app=app)
-
     return app
 
 
@@ -25,6 +25,7 @@ def register_extensions(app):
 
 def register_blueprints(app):
     app.register_blueprint(blueprint=user.views.blueprint)
+    app.register_blueprint(blueprint=ai_blueprint)
 
 
 def register_error_handlers(app):
@@ -46,5 +47,4 @@ def register_request_filter(app):
 if __name__ == "__main__":
     main_app = create_app()
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = main_app.config["OAUTHLIB_INSECURE_TRANSPORT"]
-
     main_app.run(debug=True)
