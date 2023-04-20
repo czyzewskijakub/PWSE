@@ -17,7 +17,7 @@ def prediction():
 
 @ai_blueprint.route("/statistics")
 def print_dataset_statistics():
-    return "Dataset statistics will be here"
+    return loader.load_data()
 
 
 @ai_blueprint.route("/save")
