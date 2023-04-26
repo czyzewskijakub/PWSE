@@ -37,9 +37,9 @@ def register(name: str, email, password, profile_picture_url):
     return {"message": "Successfully created user", "status_code": 201}
 
 
-def register_google_account(email):
+def register_google_account(name, email, profile_picture_url):
     if User.find_by_email(email=email) is None:
-        user = User(name="", email=email, profile_picture_url="",  account_source="Google")
+        user = User(name=name, email=email, profile_picture_url=profile_picture_url, account_source="Google")
         user.save()
     token = generate_token(email=email)
     return {
