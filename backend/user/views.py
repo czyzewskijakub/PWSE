@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request, redirect
 from .jwt import user_manager
 from .google import google_user_manager
-from flask_cors import cross_origin
 
 blueprint = Blueprint("user", __name__, url_prefix="/users")
 
@@ -40,5 +39,4 @@ def register():
 
 
 def jsonify_response(response):
-    res = jsonify({key: value for key, value in list(response.items())[:-1]}), response["status_code"]
-    return res
+    return jsonify({key: value for key, value in list(response.items())[:-1]}), response["status_code"]

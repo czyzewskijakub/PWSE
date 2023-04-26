@@ -1,7 +1,7 @@
 """Main app file"""
 import os
 
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, jsonify, make_response
 from werkzeug.exceptions import HTTPException
 from backend import user
 from backend.user.jwt.request_filter import validate

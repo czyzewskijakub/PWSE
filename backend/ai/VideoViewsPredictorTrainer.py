@@ -117,19 +117,14 @@ class VideoViewsPredictorTrainer:
                                         requires_grad=True)
             model_output = self.Model(input_tensor)
 
-            # Konwertowanie tensorów na listy Pythona
             predictions = model_output.tolist()
 
-            # Inicjalizacja zmiennej z liczbą poprawnych odpowiedzi
             correct = 0
 
-            # Przechodzenie przez wszystkie predykcje i etykiety
             for pred, label in zip(predictions, targets):
-                # Sprawdzenie, czy predykcja i etykieta są zgodne z zadanym progiem różnicy
                 if abs(100 - (label[0] * 100 / pred[0])) <= accuracy_threshold:
                     correct += 1
 
-            # Obliczenie procentowej dokładności
             accuracy = (correct / len(predictions)) * 100.0
 
             return accuracy
@@ -153,6 +148,7 @@ class VideoViewsPredictorTrainer:
         Arguments:
         - filepath: A string value representing the path to load the model from.
         """
-        checkpoint = torch.load(filepath)
+        checkpoint = torch.load(filepath, map_location=torch.device("cpu"))
+
         self.Model.load_state_dict(checkpoint['model_state_dict'])
         self.Optimizer.load_state_dict(checkpoint['optimizer_state_dict'])

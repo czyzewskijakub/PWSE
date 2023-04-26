@@ -3,7 +3,7 @@ import datetime
 import jwt
 import re
 
-from backend.user.models import User
+from backend.database.user import User
 
 
 def authorize(email, password):

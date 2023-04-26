@@ -1,17 +1,18 @@
-from flask import Blueprint, json, request
+from flask import Blueprint, request, jsonify
 
-from use import load_model_and_make_prediction
+from ..ai.use import load_model_and_make_prediction
 
-ai_blueprint = Blueprint("first", __name__, url_prefix="/model")
+ai_blueprint = Blueprint("ai", __name__, url_prefix="/ai")
 
 
 @ai_blueprint.route("/predict", methods=['POST'])
 def prediction():
-    x = json.loads(request.data).values()
-    if len(x) != 11:
-        raise ValueError(f'Input array should contain 11 elements. Provided ${len(x)}')
-    predicted = load_model_and_make_prediction(x, '900000.pt')
-    return predicted
+    req_body = request.get_json()
+    response = load_model_and_make_prediction(req_body, '900000.pt')
+
+    if "error" in response:
+        return jsonify({"error": response["error"]}), response["status_code"]
+    return jsonify({"result": response["result"][0]}), response["status_code"]
 
 
 @ai_blueprint.route("/statistics")
@@ -27,3 +28,4 @@ def save():
 @ai_blueprint.route("/history")
 def get_history_prediction():
     return "Your prediction history will be here"
+

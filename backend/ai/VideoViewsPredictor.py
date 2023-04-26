@@ -18,7 +18,8 @@ class VideoViewsPredictor(torch.nn.Module):
         """
         super(VideoViewsPredictor, self).__init__()
         self.Dtype = torch.float
-        self.Device = torch.device("cuda:0")
+        # self.Device = torch.device("cuda:0")
+        self.Device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.NumberOfFeatures: int = number_of_features
         self.fc1 = torch.nn.Linear(self.NumberOfFeatures, 32, device=self.Device, dtype=self.Dtype)
         self.fc2 = torch.nn.Linear(32, 16, device=self.Device, dtype=self.Dtype)

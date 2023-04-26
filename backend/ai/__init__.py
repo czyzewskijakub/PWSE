@@ -1,0 +1,2 @@
+"""AI module"""
+from . import *
