@@ -1,16 +1,22 @@
-import pandas as pd
-
-def main():
-    set_pandas_options()
-    load_data()
-
-def set_pandas_options():
-    pd.set_option('display.max_columns', 500)
-    pd.set_option('display.width', 1000)
-
-def load_data():
-    data_df = pd.read_csv('data/YouTubeDataset_withChannelElapsed.csv')
-    print(data_df.head())
+# coding=utf-8
+from PrepareData import PrepareData
+from VideoViewsPredictor import VideoViewsPredictor
+from VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
 
 if __name__ == "__main__":
-    main()
+    epochs = 900000
+    path = f'{epochs}.pt'
+    data = PrepareData('data/data.csv')
+    print(data.DfFinal.columns)
+    net = VideoViewsPredictor(data.Columns)
+
+    trainer = VideoViewsPredictorTrainer(net)
+    # trainer.train(data.X_train, data.Y_train, epochs)
+    # trainer.evaluate(data.X_test, data.Y_test)
+    # trainer.save(path)
+    trainer.load(path)
+    # trainer.quick_predict(data.X_test, data.Y_test, 10)
+    # print(data.X_test[0])
+    # print(data.Y_test[0])
+    print(trainer.compute_accuracy(data.X_test, data.Y_test, 10))
+
