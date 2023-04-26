@@ -1,12 +1,13 @@
 """Main app file"""
 import os
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from werkzeug.exceptions import HTTPException
 from backend import user
 from backend.user.jwt.request_filter import validate
 from backend.extensions import db
 from backend.ai.views import *
+from flask_cors import CORS
 
 
 def create_app(config_object="settings"):
@@ -34,9 +35,31 @@ def register_error_handlers(app):
         return jsonify(error.description), error.code
 
 
+
+
 def register_request_filter(app):
     """All routes that require authorization should be placed in here"""
     request_paths = []
+    ### CORS section
+    @app.after_request
+    def after_request_func(response):
+        origin = request.headers.get('Origin')
+        if request.method == 'OPTIONS':
+            response = make_response()
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add('Access-Control-Allow-Headers', 'x-csrf-token')
+            response.headers.add('Access-Control-Allow-Methods',
+                                'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+        else:
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+
+        return response
+
 
     @app.before_request
     def filter_specific_routes():
@@ -46,5 +69,11 @@ def register_request_filter(app):
 
 if __name__ == "__main__":
     main_app = create_app()
+    cors = CORS(main_app, resource={
+    r"/*":{
+        "origins":"*"
+    }
+})
+    main_app.config["CORS_HEADERS"] = "Content-Type"
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = main_app.config["OAUTHLIB_INSECURE_TRANSPORT"]
     main_app.run(debug=True)
