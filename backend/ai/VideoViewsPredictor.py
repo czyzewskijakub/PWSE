@@ -8,6 +8,7 @@ class VideoViewsPredictor(torch.nn.Module):
     """
     A PyTorch neural network model for predicting video views based on various input features.
     """
+
     def __init__(self, number_of_features):
         """
         Initializes a new instance of the VideoViewsPredictor class with the specified number of input features.

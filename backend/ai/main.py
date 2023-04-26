@@ -19,4 +19,3 @@ if __name__ == "__main__":
     # print(data.X_test[0])
     # print(data.Y_test[0])
     print(trainer.compute_accuracy(data.X_test, data.Y_test, 10))
-
