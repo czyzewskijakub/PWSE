@@ -1,14 +1,14 @@
 """Main app file"""
 import os
 
-from flask import Flask, jsonify, make_response
+from flask import Flask, make_response, jsonify, request
 from werkzeug.exceptions import HTTPException
-from backend import user
 from backend.user.jwt.request_filter import validate
 from backend.extensions import db
-from backend.ai.views import *
 from flask_cors import CORS
 
+from backend import user
+from backend import ai
 
 def create_app(config_object="settings"):
     app = Flask(import_name=__name__)
@@ -25,8 +25,8 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
-    app.register_blueprint(blueprint=user.views.blueprint)
-    app.register_blueprint(blueprint=ai_blueprint)
+    app.register_blueprint(blueprint=user.views.user_bp)
+    app.register_blueprint(blueprint=ai.views.ai_blueprint)
 
 
 def register_error_handlers(app):
