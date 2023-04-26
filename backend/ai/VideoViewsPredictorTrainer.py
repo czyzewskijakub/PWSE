@@ -2,12 +2,12 @@
 import torch
 from torch import optim, nn
 
-from VideoViewsPredictor import VideoViewsPredictor
 
 class VideoViewsPredictorTrainer:
     """
     A class for training and evaluating the VideoViewsPredictor model.
     """
+
     def __init__(self, model, learning_rate=0.01):
         """
         Initializes a new instance of the VideoViewsPredictorTrainer class with the specified number of input features
@@ -71,8 +71,10 @@ class VideoViewsPredictorTrainer:
         # Evaluate the model
         self.Model.eval()
         with torch.no_grad():
-            inputs = torch.autograd.Variable(torch.tensor(x, device=self.Model.Device, dtype=self.Model.Dtype, requires_grad=True).float())
-            targets = torch.autograd.Variable(torch.tensor(y, device=self.Model.Device, dtype=self.Model.Dtype, requires_grad=True).float())
+            inputs = torch.autograd.Variable(
+                torch.tensor(x, device=self.Model.Device, dtype=self.Model.Dtype, requires_grad=True).float())
+            targets = torch.autograd.Variable(
+                torch.tensor(y, device=self.Model.Device, dtype=self.Model.Dtype, requires_grad=True).float())
             outputs = self.Model(inputs)
             loss = self.LossFunction(outputs, targets)
             print(f'Test loss: {loss.item():14.0f}')
@@ -82,7 +84,8 @@ class VideoViewsPredictorTrainer:
             # return accuracy.item()
 
     def predict(self, data):
-        inputs = torch.autograd.Variable(torch.tensor(data, device=self.Model.Device, dtype=self.Model.Dtype, requires_grad=True).float())
+        inputs = torch.autograd.Variable(
+            torch.tensor(data, device=self.Model.Device, dtype=self.Model.Dtype, requires_grad=True).float())
         result = self.Model(inputs)
         return [x.item() for x in result]
 
@@ -110,7 +113,8 @@ class VideoViewsPredictorTrainer:
         # Get the model predictions
         self.Model.eval()
         with torch.no_grad():
-            input_tensor = torch.tensor(input_data, device=self.Model.Device, dtype=self.Model.Dtype, requires_grad=True)
+            input_tensor = torch.tensor(input_data, device=self.Model.Device, dtype=self.Model.Dtype,
+                                        requires_grad=True)
             model_output = self.Model(input_tensor)
 
             # Konwertowanie tensorów na listy Pythona
@@ -122,7 +126,7 @@ class VideoViewsPredictorTrainer:
             # Przechodzenie przez wszystkie predykcje i etykiety
             for pred, label in zip(predictions, targets):
                 # Sprawdzenie, czy predykcja i etykieta są zgodne z zadanym progiem różnicy
-                if abs(100 - (label[0]*100/pred[0])) <= accuracy_threshold:
+                if abs(100 - (label[0] * 100 / pred[0])) <= accuracy_threshold:
                     correct += 1
 
             # Obliczenie procentowej dokładności

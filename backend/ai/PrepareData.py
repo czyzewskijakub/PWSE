@@ -1,5 +1,4 @@
 # coding=utf-8
-from typing import List
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -7,7 +6,8 @@ from sklearn.preprocessing import StandardScaler
 
 
 class PrepareData:
-    def __init__(self, path: str = 'data/data.csv', exclude_cols=None, tested_col_name: str = 'channelViewCount', test_size: float = 0.2, random_state: int = 42):
+    def __init__(self, path: str = 'data/data.csv', exclude_cols=None, tested_col_name: str = 'channelViewCount',
+                 test_size: float = 0.2, random_state: int = 42):
         if exclude_cols is None:
             exclude_cols = ['index', 'channelId', 'videoCategoryId', 'videoId', 'videoPublished', 'channelelapsedtime']
 
@@ -26,12 +26,14 @@ class PrepareData:
         self.DfFinal['elapsedtime'] = pd.factorize(self.DfFinal['elapsedtime'])[0]
 
         X = self.DfFinal.drop([self.TestedColName], axis=1)
-        y = self.DfFinal[self.TestedColName].values.reshape(-1, 1)  # Reshape target tensor to match predicted output tensor
-        self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(X, y, test_size=self.TestSize, random_state=self.RandomState)
+        y = self.DfFinal[self.TestedColName].values.reshape(-1,
+                                                            1)  # Reshape target tensor to match predicted output tensor
+        self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(X, y, test_size=self.TestSize,
+                                                                                random_state=self.RandomState)
 
         # Scale the data
         scaler = StandardScaler()
         self.X_train = scaler.fit_transform(self.X_train)
         self.X_test = scaler.transform(self.X_test)
 
-        self.Columns: int = self.DfFinal.shape[1]-1
+        self.Columns: int = self.DfFinal.shape[1] - 1
