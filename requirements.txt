@@ -9,7 +9,7 @@ google-auth-oauthlib~=1.0.0
 
 pandas~=2.0.1
 scikit-learn~=1.2.2
-torch~=2.0.0
+torch==2.0.0+cpu
 PyJWT~=2.6.0
 CacheControl~=0.12.11
 requests==2.29.0
