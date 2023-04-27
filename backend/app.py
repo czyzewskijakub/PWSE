@@ -39,7 +39,7 @@ def register_error_handlers(app):
 
 def register_request_filter(app):
     """All routes that require authorization should be placed in here"""
-    request_paths = []
+    request_paths = ["/ai/predict"]
     ### CORS section
     @app.after_request
     def after_request_func(response):
