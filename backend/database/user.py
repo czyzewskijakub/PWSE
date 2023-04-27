@@ -41,3 +41,11 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
         return self
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "profile_picture_url": self.profile_picture_url
+        }

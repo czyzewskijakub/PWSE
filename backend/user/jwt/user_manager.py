@@ -14,6 +14,7 @@ def authorize(email, password):
         return {
             "message": "Successfully logged in",
             "token": token,
+            "user": user.to_dict(),
             "status_code": 202
         }
 
