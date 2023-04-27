@@ -1,7 +1,6 @@
-# coding=utf-8
-from PrepareData import PrepareData
-from VideoViewsPredictor import VideoViewsPredictor
-from VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
+from backend.ai.PrepareData import PrepareData
+from backend.ai.VideoViewsPredictor import VideoViewsPredictor
+from backend.ai.VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
 
 if __name__ == "__main__":
     epochs = 900000
