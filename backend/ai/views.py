@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 
-from .data import stats
 from ..ai.use import load_model_and_make_prediction
 
 ai_blueprint = Blueprint("ai", __name__, url_prefix="/ai")

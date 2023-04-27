@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, redirect
 from .jwt import user_manager, request_filter
 from .google import google_user_manager
 from backend import settings
+from .user_history import history_manager
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
 
@@ -52,6 +53,20 @@ def register():
     res = user_manager.register(name=name, email=email, password=password, profile_picture_url=profile_picture_url)
 
     return jsonify_response(res)
+
+
+@user_bp.route("/history/save", methods=["POST"])
+def save():
+    req_body = request.get_json()
+    response = history_manager.save_history(req_body=req_body)
+    return jsonify_response(response)
+
+
+@user_bp.route("/history/get", methods=["GET"])
+def get_history_prediction():
+    user_id = request.args.get('user_id')
+    response = history_manager.read_history(user_id)
+    return jsonify_response(response)
 
 
 def jsonify_response(response):

@@ -17,7 +17,7 @@ def create_app(config_object="settings"):
     register_extensions(app=app)
     register_blueprints(app=app)
     register_error_handlers(app=app)
-    register_request_filter(app=app)
+    set_headers(app=app)
     return app
 
 
@@ -42,36 +42,13 @@ def register_error_handlers(app):
 
 
 
-def register_request_filter(app):
-    """All routes that require authorization should be placed in here"""
-    request_paths = ["/ai/predict"]
-    @app.before_request
-    def filter_specific_routes():
-        if request.path in request_paths:
-            validate(config=app.config)
-
+def set_headers(app):
     @app.after_request
     def after_request_func(response):
-        origin = request.headers.get('Origin')
-        if request.method == 'OPTIONS':
-            response = make_response()
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
-            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-            response.headers.add('Access-Control-Allow-Headers', 'Authorization')
-            response.headers.add('Access-Control-Allow-Headers', 'x-csrf-token')
-            response.headers.add('Access-Control-Allow-Methods',
-                                'GET, POST, OPTIONS, PUT, PATCH, DELETE')
-            if origin:
-                response.headers.add('Access-Control-Allow-Origin', origin)
-        else:
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
-            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-            response.headers.add('Access-Control-Allow-Headers', 'Authorization')
-            response.headers.add('Access-Control-Allow-Headers', 'x-csrf-token')
-            response.headers.add('Access-Control-Allow-Methods',
-                                'GET, POST, OPTIONS, PUT, PATCH, DELETE')
-            if origin:
-                response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', '*')
+        response.headers.add('Access-Control-Allow-Methods','GET, POST, OPTIONS, PUT, PATCH, DELETE')
+        response.headers.add('Access-Control-Allow-Origin', "*")
 
         return response
 
