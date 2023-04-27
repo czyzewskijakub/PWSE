@@ -9,7 +9,7 @@ from backend.extensions import db
 from flask_cors import CORS
 
 from backend import user
-from backend import ai
+from backend.ai import views
 
 def create_app(config_object="settings"):
     app = Flask(import_name=__name__)
@@ -27,7 +27,7 @@ def register_extensions(app):
 
 def register_blueprints(app):
     app.register_blueprint(blueprint=user.views.user_bp)
-    app.register_blueprint(blueprint=ai.views.ai_blueprint)
+    app.register_blueprint(blueprint=views.ai_blueprint)
 
 
 def register_error_handlers(app):

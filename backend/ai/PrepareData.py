@@ -37,25 +37,16 @@ class PrepareData:
         self.DfFinal = self.DfFinal.fillna(0)
 
         self.X = self.DfFinal.drop([self.TestedColName], axis=1)
-        self.Y = self.DfFinal[self.TestedColName].values.reshape(-1, 1)  # Reshape target tensor to match predicted output tensor
+        self.Y = self.DfFinal[self.TestedColName].values.reshape(-1, 1)
         self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X, self.Y, test_size=self.TestSize,
                                                                                 random_state=self.RandomState)
         self.X_train = self.X.copy()
         self.Y_train = self.Y.copy()
 
-        # for column in self.columns:
-        #     self.X_train[column] = self.X_train[column].apply(lambda x: (x-self.min_values[column])/(self.max_values[column]-self.min_values[column]))
-        #
-        # for column in self.columns:
-        #     self.X_test[column] = self.X_test[column].apply(lambda x: (x-self.min_values[column])/(self.max_values[column]-self.min_values[column]))
-
         self.Scaler = StandardScaler()
         self.Scaler.fit(self.X)
         self.X_train = self.Scaler.transform(self.X_train)
         self.X_test = self.Scaler.transform(self.X_test)
-
-        # self.X_train = self.X_train.to_numpy()
-        # self.X_test = self.X_test.to_numpy()
 
         self.Columns: int = self.X.shape[1]
 
@@ -72,6 +63,5 @@ if __name__=="__main__":
     pd.set_option('display.width', 1000)
     data = PrepareData('data/data1.csv')
     df = data.DfFinal.copy()
-    df['VPublishedDate'].apply(lambda x: x-1123279200)
-    print(df.corr())
+    df['VPublishedDate'].apply(lambda x: x - 1123279200)
 

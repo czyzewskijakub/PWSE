@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-from ..ai.use import load_model_and_make_prediction
-from ..ai.data import stats
+from ..ai.use import test
 
 ai_blueprint = Blueprint("ai", __name__, url_prefix="/ai")
 
@@ -9,11 +8,10 @@ ai_blueprint = Blueprint("ai", __name__, url_prefix="/ai")
 @ai_blueprint.route("/predict", methods=['POST'])
 def prediction():
     req_body = request.get_json()
-    response = load_model_and_make_prediction(req_body, '900000.pt')
-
+    response = test(req_body)
     if "error" in response:
         return jsonify({"error": response["error"]}), response["status_code"]
-    return jsonify({"result": response["result"][0]}), response["status_code"]
+    return jsonify({"views": response["views"]}), response["status_code"]
 
 
 @ai_blueprint.route("/statistics/likes")

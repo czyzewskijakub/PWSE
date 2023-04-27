@@ -12,12 +12,4 @@ data2.columns = ['CVideos', 'CViews', 'CComments', 'CElapsedTime', 'CSubscribers
 
 data2['VPublishedDate'] = data2['VPublishedDate'].apply(lambda x: time.mktime(datetime.datetime.strptime(x[:10], "%Y-%m-%d").timetuple()))
 
-# max_value = data2.max().to_dict()
-# min_value = data2.min().to_dict()
-# print(max_value)
-# print(min_value)
-# data2 = data2.div(max_value)
-
-print(data2.head())
-
 data2.to_csv('data\data1.csv')
