@@ -6,11 +6,9 @@ from flask import request, abort
 def validate(config):
     auth_header = request.headers.get("Authorization")
 
-    print(auth_header)
     token = ""
     if auth_header is not None:
         token = auth_header.split()[1]
-    print(token)
     try:
         payload = jwt.decode(jwt=token, key=config["SECRET_KEY"], algorithms=config["ALGORITHM"])
         return payload
