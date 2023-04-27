@@ -16,26 +16,34 @@ def load_model_and_make_prediction(req_body, path):
     elapsedtime, videoPublished.
     """
     keys = ["channel_view_count", "channel_elapsed_time", "channel_video_count", "channel_subscriber_count",
-            "channel_comment_count", "video_categoryId", "likes", "dislikes", "comments", "elapsed_time",
-            "video_published"]
+            "channel_comment_count", "likes", "dislikes", "comments", "elapsed_time"]
 
     for key in keys:
         if key not in req_body:
             print(key)
             return {"error": "Not acceptable prediction parameters where provided", "status_code": 406}
 
-    params = list(req_body.values())
     file = os.path.join(pathlib.Path(__file__).parent, path)
 
     model: VideoViewsPredictor = VideoViewsPredictor(20)
     trainer = VideoViewsPredictorTrainer(model)
     trainer.load(file)
 
-    data = [params[0] / params[1], params[0], params[6] / params[3], params[0] / params[2] / params[3], params[2],
-            params[3], params[7] / params[0] / params[2], params[8] / params[3], params[6] / params[0] / params[2],
-            params[4], params[6] / params[7], params[8] / params[0] / params[2], params[0] / params[2], params[9],
-            params[6], params[7], params[7] / params[3], params[0] / params[3], params[0] / params[2] / params[9],
-            params[8]]
+    data = [req_body["channel_view_count"] / req_body["channel_elapsed_time"], req_body["channel_view_count"],
+            req_body["likes"] / req_body["channel_subscriber_count"],
+            req_body["channel_view_count"]  / req_body["channel_video_count"] / req_body["channel_subscriber_count"],
+            req_body["channel_video_count"], req_body["channel_subscriber_count"],
+            req_body["dislikes"] / req_body["channel_view_count"] / req_body["channel_video_count"],
+            req_body["comments"] / req_body["channel_subscriber_count"],
+            req_body["likes"] / req_body["channel_view_count"]  / req_body["channel_video_count"],
+            req_body["channel_comment_count"], req_body["likes"] / req_body["dislikes"],
+            req_body["comments"] / req_body["channel_view_count"]  / req_body["channel_video_count"],
+            req_body["channel_view_count"]  / req_body["channel_video_count"], req_body["elapsed_time"],
+            req_body["likes"], req_body["dislikes"], req_body["dislikes"] / req_body["channel_subscriber_count"],
+            req_body["channel_view_count"]  / req_body["channel_subscriber_count"],
+            req_body["channel_view_count"]  / req_body["channel_video_count"]  / req_body["elapsed_time"],
+            req_body["comments"]]
+
 
     result = trainer.predict(data)
     return {"result": result, "status_code": 200}

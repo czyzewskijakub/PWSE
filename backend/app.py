@@ -1,4 +1,5 @@
 """Main app file"""
+import json
 import os
 
 from flask import Flask, make_response, jsonify, request
@@ -34,13 +35,21 @@ def register_error_handlers(app):
     def handle_error(error):
         return jsonify(error.description), error.code
 
+    @app.errorhandler(code_or_exception=401)
+    def unauthorized(error):
+        return json.dumps({"message": "Unauthorized"}), \
+            401, {'Content-Type': 'application/json; charset=utf-8'}
 
 
 
 def register_request_filter(app):
     """All routes that require authorization should be placed in here"""
-    request_paths = []
-    ### CORS section
+    request_paths = ["/ai/predict"]
+    @app.before_request
+    def filter_specific_routes():
+        if request.path in request_paths:
+            validate(config=app.config)
+
     @app.after_request
     def after_request_func(response):
         origin = request.headers.get('Origin')
@@ -48,6 +57,7 @@ def register_request_filter(app):
             response = make_response()
             response.headers.add('Access-Control-Allow-Credentials', 'true')
             response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add('Access-Control-Allow-Headers', 'Authorization')
             response.headers.add('Access-Control-Allow-Headers', 'x-csrf-token')
             response.headers.add('Access-Control-Allow-Methods',
                                 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
@@ -55,25 +65,20 @@ def register_request_filter(app):
                 response.headers.add('Access-Control-Allow-Origin', origin)
         else:
             response.headers.add('Access-Control-Allow-Credentials', 'true')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add('Access-Control-Allow-Headers', 'Authorization')
+            response.headers.add('Access-Control-Allow-Headers', 'x-csrf-token')
+            response.headers.add('Access-Control-Allow-Methods',
+                                'GET, POST, OPTIONS, PUT, PATCH, DELETE')
             if origin:
                 response.headers.add('Access-Control-Allow-Origin', origin)
 
         return response
 
 
-    @app.before_request
-    def filter_specific_routes():
-        if request.path in request_paths:
-            validate(config=app.config)
-
-
 if __name__ == "__main__":
     main_app = create_app()
-    cors = CORS(main_app, resource={
-    r"/*":{
-        "origins":"*"
-    }
-})
+    cors = CORS(main_app, resource={r"/*":{"origins":"*"}})
     main_app.config["CORS_HEADERS"] = "Content-Type"
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = main_app.config["OAUTHLIB_INSECURE_TRANSPORT"]
     main_app.run(debug=True)
