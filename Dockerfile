@@ -6,7 +6,6 @@ COPY . /pwse
 WORKDIR /pwse
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN pip install torch torchvision torchaudio
 WORKDIR /pwse/backend
 
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
