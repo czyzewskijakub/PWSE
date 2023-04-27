@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 
+from .data import stats
 from ..ai.use import load_model_and_make_prediction
 
 ai_blueprint = Blueprint("ai", __name__, url_prefix="/ai")
@@ -17,7 +18,7 @@ def prediction():
 
 @ai_blueprint.route("/statistics")
 def print_dataset_statistics():
-    return loader.load_data()
+    return stats.load_data()
 
 
 @ai_blueprint.route("/save")

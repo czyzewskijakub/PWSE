@@ -1,41 +1,6 @@
-import json
-
-import pandas as pd
-import matplotlib.pyplot as plt
-
-
-def main():
-    set_pandas_options()
-    load_data()
-
-
-def set_pandas_options():
-    pd.set_option('display.max_columns', 500)
-    pd.set_option('display.width', 1000)
-
-
-def load_data():
-    # Change to your Path
-    data_df = pd.read_csv("C:\Studia\Semy\Sem 6\PWSE\\PWSE\\backend\\ai\data\YouTubeDataset_withChannelElapsed.csv")
-    a = data_df.groupby('videoCategoryId')['videoLikeCount'].sum()
-    x = a.keys().tolist()
-    y = a.tolist()
-
-    return prepare_json_results_from_array(x, y)
-
-
-def prepare_json_results_from_array(x, y):
-    lista = []
-    for i in range(len(x)):
-        object = {"x": x[i], "y": y[i]}
-        lista.append(object)
-    print(lista)
-    return json.dumps(lista)
-
-# coding=utf-8
-from PrepareData import PrepareData
-from VideoViewsPredictor import VideoViewsPredictor
-from VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
+from backend.ai.PrepareData import PrepareData
+from backend.ai.VideoViewsPredictor import VideoViewsPredictor
+from backend.ai.VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
 
 if __name__ == "__main__":
     epochs = 900000
