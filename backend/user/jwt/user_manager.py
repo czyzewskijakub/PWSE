@@ -14,7 +14,6 @@ def authorize(email, password):
         return {
             "message": "Successfully logged in",
             "token": token,
-            "user": user.to_dict(),
             "status_code": 202
         }
 
@@ -55,6 +54,12 @@ def generate_token(email):
                                "exp": datetime.datetime.utcnow() + datetime.timedelta(
                                    config.EXP_TIME_MIN)},
                       key=config.SECRET_KEY, algorithm=config.ALGORITHM)
+
+def get_user_data(email):
+    user = User.find_by_email(email=email)
+    if user is None:
+        return {"error": "User was no found", "status_code": 404}
+    return {"user": user.to_dict(), "status_code": 200}
 
 
 def sufficient_password(password: str):

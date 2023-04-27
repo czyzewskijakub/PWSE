@@ -5,22 +5,21 @@ from backend import settings
 from .user_history import history_manager
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
+config = {
+        "ALGORITHM": settings.ALGORITHM,
+        "SECRET_KEY": settings.SECRET_KEY
+    }
 
 @user_bp.route("/login", methods=["POST"])
 def login():
     req_body = request.get_json()
     email: str = req_body["email"]
     password: str = req_body["password"]
-
     res = user_manager.authorize(email=email, password=password)
     return jsonify_response(res)
 
 @user_bp.route("/authorize", methods=["POST"])
 def authorize():
-    config = {
-        "ALGORITHM": settings.ALGORITHM,
-        "SECRET_KEY": settings.SECRET_KEY
-    }
     response = request_filter.validate(config)
     return jsonify(response)
 
@@ -67,6 +66,13 @@ def get_history_prediction():
     user_id = request.args.get('user_id')
     response = history_manager.read_history(user_id)
     return jsonify_response(response)
+
+@user_bp.route("/profile", methods=["POST"])
+def get_user_data():
+    response = request_filter.validate(config)
+    email = response["user"]
+    user = user_manager.get_user_data(email)
+    return jsonify_response(user)
 
 
 def jsonify_response(response):
