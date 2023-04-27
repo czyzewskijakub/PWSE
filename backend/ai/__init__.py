@@ -1,2 +1,2 @@
 """AI module"""
-from . import views
+from . import *
