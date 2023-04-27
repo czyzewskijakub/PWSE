@@ -1,8 +1,10 @@
 import os
 import pathlib
+from typing import Dict
 
-from ..ai.VideoViewsPredictor import VideoViewsPredictor
-from ..ai.VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
+from VideoViewsPredictor import VideoViewsPredictor
+from VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
+from sklearn.preprocessing import StandardScaler
 
 
 def load_model_and_make_prediction(req_body, path):
@@ -49,3 +51,41 @@ def load_model_and_make_prediction(req_body, path):
     return {"result": result, "status_code": 200}
 
 
+def test(data: Dict):
+    """
+    data = {'CVideos': 2, 'CViews': 40, 'CComments': 23, 'CElapsedTime': 888, 'CSubscribers': 1,
+                  'VCategory': 1, 'VPublishedDate': "2002-12-03", 'VLikes': 12, 'VDislikes': 3,
+                  'VComments': 24, 'VElapsedTime': 17520}
+
+    """
+    net = VideoViewsPredictor(11)
+    trainer = VideoViewsPredictorTrainer(net, StandardScaler())
+    trainer.load('30000.pt')
+    return trainer.predict(data)[0]
+
+if __name__ == '__main__':
+    # data = {'CVideos': 813, 'CViews': 4009812, 'CComments': 90, 'CElapsedTime': 59736, 'CSubscribers': 40482,
+    #               'VCategory': 20, 'VPublishedDate': "2012-06-05", 'VLikes': 83, 'VDislikes': 4,
+    #               'VComments': 36, 'VElapsedTime': 46752}
+
+    # data = {'CVideos': 1766, 'CViews': 399839933, 'CComments': 2541, 'CElapsedTime': 100081, 'CSubscribers': 1043486,
+    #               'VCategory': 24, 'VPublishedDate': "2013-05-16", 'VLikes': 1022, 'VDislikes': 27,
+    #               'VComments': 96, 'VElapsedTime': 38448}
+
+    # data = {'CVideos': 46, 'CViews': 932034, 'CComments': 29, 'CElapsedTime': 73800, 'CSubscribers': 695,
+    #               'VCategory': 20, 'VPublishedDate': "2013-07-02", 'VLikes': 556, 'VDislikes': 161,
+    #               'VComments': 139, 'VElapsedTime': 37344}
+
+    # data = {'CVideos': 39, 'CViews': 10125019, 'CComments': 29, 'CElapsedTime': 99097, 'CSubscribers': 2115,
+    #               'VCategory': 10, 'VPublishedDate': "2006-08-08", 'VLikes': 2102, 'VDislikes': 271,
+    #               'VComments': 410, 'VElapsedTime': 97825}
+
+    # data = {'CVideos': 165, 'CViews': 4658668, 'CComments': 22, 'CElapsedTime': 76128, 'CSubscribers': 17095,
+    #               'VCategory': 26, 'VPublishedDate': "2012-08-27", 'VLikes': 53, 'VDislikes': 5,
+    #               'VComments': 3, 'VElapsedTime': 44760}
+
+    data = {'CVideos': 21, 'CViews': 320948, 'CComments': 17, 'CElapsedTime': 61080, 'CSubscribers': 625,
+                  'VCategory': 10, 'VPublishedDate': "2012-07-27", 'VLikes': 88, 'VDislikes': 3,
+                  'VComments': 13, 'VElapsedTime': 45504}
+
+    print(test(data))
