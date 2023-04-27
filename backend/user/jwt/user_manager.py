@@ -3,7 +3,7 @@ import datetime
 import jwt
 import re
 
-from backend.user.models import User
+from backend.database.user import User
 
 
 def authorize(email, password):
@@ -20,24 +20,26 @@ def authorize(email, password):
     return {"error": "Could not log in", "status_code": 401}
 
 
-def register(email, password):
+def register(name: str, email, password, profile_picture_url):
     if User.find_by_email(email=email) is not None:
         return {"error": "Email is taken", "status_code": 409}
     elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
         return {"error": "Incorrect email", "status_code": 409}
+    elif name is None or len(name) == 0:
+        return {"error": "User name has to be provided", "status_code": 409}
     elif password is None or not sufficient_password(password=password):
         return {"error": "Password is not sufficient", "status_code": 403}
 
-    user = User(email=email, account_source="FlickTrendz")
+    user = User(name=name, email=email, profile_picture_url=profile_picture_url, account_source="FlickTrendz")
     user.set_password(password)
 
     user.save()
     return {"message": "Successfully created user", "status_code": 201}
 
 
-def register_google_account(email):
+def register_google_account(name, email, profile_picture_url):
     if User.find_by_email(email=email) is None:
-        user = User(email=email, account_source="Google")
+        user = User(name=name, email=email, profile_picture_url=profile_picture_url, account_source="Google")
         user.save()
     token = generate_token(email=email)
     return {

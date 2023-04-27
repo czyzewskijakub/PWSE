@@ -7,12 +7,17 @@ from backend.extensions import db
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=False, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, unique=False, nullable=True)
+    profile_picture_url = db.Column(db.String, unique=False, nullable=True)
     account_source = db.Column(db.String, unique=False, nullable=False)
 
-    def __init__(self, email, account_source):
+
+    def __init__(self, name, email, profile_picture_url, account_source):
+        self.name = name
         self.email = email
+        self.profile_picture_url = profile_picture_url
         self.account_source = account_source
 
     def set_password(self, password):
@@ -37,6 +42,3 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
         return self
-
-    def __repr__(self):
-        return f"<User({self.email!r}, {self.password})>"

@@ -41,5 +41,7 @@ def callback_from_google_login():
         request=token_request,
         audience=settings.GOOGLE_CLIENT_ID
     )
-    res = user_manager.register_google_account(email=id_info["email"])
+    res = user_manager.register_google_account(name=id_info["name"],
+                                               email=id_info["email"],
+                                               profile_picture_url=id_info["picture"])
     return res
