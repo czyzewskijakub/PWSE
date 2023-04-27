@@ -58,6 +58,22 @@ def test(data: Dict):
                   'VComments': 24, 'VElapsedTime': 17520}
 
     """
+    keys = ["channel_view_count", "channel_elapsed_time", "channel_video_count", "channel_subscriber_count",
+            "channel_comment_count", "video_categoryId", "likes", "dislikes", "comments", "elapsed_time",
+            "video_published"]
+    data2 = {}
+    data2['CVideos'] = data['channel_video_count']
+    data2['CViews'] = data['channel_view_count']
+    data2['CComments'] = data['channel_comment_count']
+    data2['CElapsedTime'] = data['channel_elapsed_time']
+    data2['CSubscribers'] = data['channel_subscriber_count']
+    data2['VCategory'] = data['video_categoryId']
+    data2['VPublishedDate'] = data['video_published']
+    data2['VLikes'] = data['likes']
+    data2['VDislikes'] = data['dislikes']
+    data2['VComments'] = data['comments']
+    data2['VElapsedTime'] = data['elapsed_time']
+
     net = VideoViewsPredictor(11)
     trainer = VideoViewsPredictorTrainer(net, StandardScaler())
     trainer.load('30000.pt')
