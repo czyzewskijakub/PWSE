@@ -13,7 +13,6 @@ class User(UserMixin, db.Model):
     profile_picture_url = db.Column(db.String, unique=False, nullable=True)
     account_source = db.Column(db.String, unique=False, nullable=False)
 
-
     def __init__(self, name, email, profile_picture_url, account_source):
         self.name = name
         self.email = email
