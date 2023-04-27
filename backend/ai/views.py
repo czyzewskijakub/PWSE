@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 
+from .data import stats
 from ..ai.use import test
 
 ai_blueprint = Blueprint("ai", __name__, url_prefix="/ai")

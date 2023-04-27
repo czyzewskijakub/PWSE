@@ -1,10 +1,9 @@
 # coding=utf-8
 import pandas as pd
 
-from PrepareData import PrepareData
-from VideoViewsPredictor import VideoViewsPredictor
-from VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
-from use import load_model_and_make_prediction
+from backend.ai.PrepareData import PrepareData
+from backend.ai.VideoViewsPredictor import VideoViewsPredictor
+from backend.ai.VideoViewsPredictorTrainer import VideoViewsPredictorTrainer
 
 if __name__ == "__main__":
     epochs = 10000
