@@ -1,10 +1,9 @@
 from flask import Blueprint, jsonify, request, redirect
-from .jwt import user_manager
+from .jwt import user_manager, request_filter
 from .google import google_user_manager
-from flask_cors import cross_origin
+from backend import settings
 
 user_bp = Blueprint("user", __name__, url_prefix="/users")
-
 
 @user_bp.route("/login", methods=["POST"])
 def login():
@@ -14,6 +13,15 @@ def login():
 
     res = user_manager.authorize(email=email, password=password)
     return jsonify_response(res)
+
+@user_bp.route("/authorize", methods=["POST"])
+def authorize():
+    config = {
+        "ALGORITHM": settings.ALGORITHM,
+        "SECRET_KEY": settings.SECRET_KEY
+    }
+    response = request_filter.validate(config)
+    return jsonify(response)
 
 
 @user_bp.route("/login/google")
