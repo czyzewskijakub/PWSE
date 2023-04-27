@@ -1,4 +1,5 @@
 """Main app file"""
+import json
 import os
 
 from flask import Flask, make_response, jsonify, request
@@ -34,13 +35,21 @@ def register_error_handlers(app):
     def handle_error(error):
         return jsonify(error.description), error.code
 
+    @app.errorhandler(code_or_exception=401)
+    def unauthorized(error):
+        return json.dumps({"message": "Unauthorized"}), \
+            401, {'Content-Type': 'application/json; charset=utf-8'}
 
 
 
 def register_request_filter(app):
     """All routes that require authorization should be placed in here"""
     request_paths = ["/ai/predict"]
-    ### CORS section
+    @app.before_request
+    def filter_specific_routes():
+        if request.path in request_paths:
+            validate(config=app.config)
+
     @app.after_request
     def after_request_func(response):
         origin = request.headers.get('Origin')
@@ -61,19 +70,9 @@ def register_request_filter(app):
         return response
 
 
-    @app.before_request
-    def filter_specific_routes():
-        if request.path in request_paths:
-            validate(config=app.config)
-
-
 if __name__ == "__main__":
     main_app = create_app()
-    cors = CORS(main_app, resource={
-    r"/*":{
-        "origins":"*"
-    }
-})
+    cors = CORS(main_app, resource={r"/*":{"origins":"*"}})
     main_app.config["CORS_HEADERS"] = "Content-Type"
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = main_app.config["OAUTHLIB_INSECURE_TRANSPORT"]
     main_app.run(debug=True)
