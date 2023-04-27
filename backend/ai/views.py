@@ -16,17 +16,20 @@ def prediction():
     return jsonify({"result": response["result"][0]}), response["status_code"]
 
 
-@ai_blueprint.route("/statistics")
-def print_dataset_statistics():
-    return stats.load_data()
+@ai_blueprint.route("/statistics/likes")
+def get_average_likes():
+    return stats.load_data('videoLikeCount', "Average Likes")
 
+@ai_blueprint.route("/statistics/dislikes")
+def get_average_dislikes():
+    return stats.load_data('videoDislikeCount', "Average Dislikes")
 
-@ai_blueprint.route("/save")
-def save():
-    return "Save prediction will be here"
+@ai_blueprint.route("/statistics/comments")
+def get_average_comments():
+    return stats.load_data('VideoCommentCount', "Average Comments")
 
+@ai_blueprint.route("/statistics/views")
+def get_average_views():
+    return stats.load_data('videoViewCount', "Average Views")
 
-@ai_blueprint.route("/history")
-def get_history_prediction():
-    return "Your prediction history will be here"
 

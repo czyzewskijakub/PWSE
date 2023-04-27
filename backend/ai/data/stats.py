@@ -4,31 +4,30 @@ import os
 import pandas as pd
 
 
-def main():
-    set_pandas_options()
-    load_data()
-
-
-def set_pandas_options():
-    pd.set_option('display.max_columns', 500)
-    pd.set_option('display.width', 1000)
-
-
-def load_data():
-    # Change to your Path
+def load_data(parameter, values_desc):
     path = os.getcwd()+"/ai/data.csv"
     data_df = pd.read_csv(path)
-    a = data_df.groupby('videoCategoryId')['videoLikeCount'].sum()
+    a = data_df.groupby('videoCategoryId')[parameter].mean()
+
     x = a.keys().tolist()
+    path2 = os.getcwd()+"/ai/categoryID.csv"
+    data_df2 = pd.read_csv(path2)
+    category_title = data_df2[["categoryID", "Title"]].to_numpy()
     y = a.tolist()
 
-    return prepare_json_results_from_array(x, y)
+    return prepare_json_results_from_array(x, y, category_title, values_desc)
 
 
-def prepare_json_results_from_array(x, y):
+def prepare_json_results_from_array(x, y, category_title, values_desc):
     lista = []
-    for i in range(len(x)):
-        object = {"Category": x[i], "Average Likes": y[i]}
+    for j in range(len(x)):
+        category = ""
+        for i in range(len(category_title)):
+            if x[j] == category_title[i][0]:
+                category = category_title[i][1]
+                break
+        if category == "":
+            category = "Uncategorized"
+        object = {"Category": category, values_desc: round(y[j])}
         lista.append(object)
-    print(lista)
     return json.dumps(lista)
