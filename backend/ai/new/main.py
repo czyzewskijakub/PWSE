@@ -21,18 +21,9 @@ def prepare_data():
     o = data['view_count']
     i = data.drop(['view_count'], axis=1)
 
-    # Load pre-trained tokenizer and model
-    tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
-    model = AutoModel.from_pretrained('bert-base-uncased')
-
     x1, x2, y1, y2 = train_test_split(i, o, random_state=42, test_size=0.9999, shuffle=True)
 
-    feature_vector = []
-    for col in x1:
-        print(col)
-        feature_vector.append(encode_string(tokenizer, model, x1, col) if col in TEXT_FEATURES else x1[col].tolist())
-
-    return feature_vector, x1, x2, y1, y2
+    return x1, x2, y1, y2
 
 
 def encode_string(tokenizer, model, data, column_name):
@@ -40,7 +31,8 @@ def encode_string(tokenizer, model, data, column_name):
     for i, s in enumerate(data[column_name]):
         # Tokenize the input s
         print(f'Encoding {s}')
-        tokens = tokenizer.encode(str(s), add_special_tokens=True, max_length=512, truncation=True, padding='max_length')
+        tokens = tokenizer.encode(str(s), add_special_tokens=True, max_length=512, truncation=True,
+                                  padding='max_length')
 
         # Convert the tokens to PyTorch tensors
         input_ids = torch.tensor([tokens])
@@ -52,15 +44,34 @@ def encode_string(tokenizer, model, data, column_name):
         # Extract the vector representation of the first token (CLS token)
         sentence_vector = vectors[0]
 
-        encoded_vectors.append(sentence_vector.tolist())
+        encoded_vectors.append(sentence_vector)
         print(f'{column_name} {i} / {len(data[column_name])}')
 
-    return encoded_vectors
+    return torch.cat(encoded_vectors, dim=0)
+
+
+def extract_features(tokenizer, model, training_set):
+    feature_vector = []
+    for col in training_set:
+        if col in TEXT_FEATURES:
+            feature_vector.append(encode_string(tokenizer, model, training_set, col))
+        elif col in BOOL_FEATURES:
+            feature_vector.append(torch.tensor(training_set[col].apply(lambda x: 1 if x else 0).tolist()).float())
+        else:
+            feature_vector.append(torch.tensor(training_set[col].tolist()).float())
+
+    return torch.cat([torch.tensor(sublist) for sublist in feature_vector], dim=0)
 
 
 if __name__ == '__main__':
 
-    input_features, x_train, x_test, y_train, y_test = prepare_data()
+    x_train, x_test, y_train, y_test = prepare_data()
+
+    # Load pre-trained tokenizer and model
+    tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
+    model = AutoModel.from_pretrained('bert-base-uncased')
+
+    input_features = extract_features(tokenizer, model, x_train)
 
     dtype = torch.float
     device = torch.device("cpu")
@@ -72,7 +83,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
     for epoch in range(1000):
-        inputs = torch.autograd.Variable(torch.Tensor(input_features).float())
+        inputs = torch.autograd.Variable(input_features)
         targets = torch.autograd.Variable(torch.Tensor(y_train).float())
 
         optimizer.zero_grad()
