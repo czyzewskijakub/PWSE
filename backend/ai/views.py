@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 
-from .data import stats
 from ..ai.use import test
 from ..stats.StatCalculator import StatCalculator
 
@@ -15,26 +14,6 @@ def prediction():
     if "error" in response:
         return jsonify({"error": response["error"]}), response["status_code"]
     return jsonify({"views": response["views"]}), response["status_code"]
-
-
-@ai_blueprint.route("/statistics/likes", methods=['GET'])
-def get_average_likes():
-    return stats.load_data('videoLikeCount', "Average Likes")
-
-
-@ai_blueprint.route("/statistics/dislikes", methods=['GET'])
-def get_average_dislikes():
-    return stats.load_data('videoDislikeCount', "Average Dislikes")
-
-
-@ai_blueprint.route("/statistics/comments", methods=['GET'])
-def get_average_comments():
-    return stats.load_data('VideoCommentCount', "Average Comments")
-
-
-@ai_blueprint.route("/statistics/views", methods=['GET'])
-def get_average_views():
-    return stats.load_data('videoViewCount', "Average Views")
 
 
 @ai_blueprint.route("/statistics/describe", methods=['GET'])
