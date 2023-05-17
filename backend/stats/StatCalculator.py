@@ -1,9 +1,11 @@
+import os
+
 import pandas as pd
 
 
 class StatCalculator:
 
-    def __init__(self, data='../ai/data/data.csv', **kwargs) -> None:
+    def __init__(self, data=os.getcwd() + "/ai/data/data.csv", **kwargs) -> None:
         f"""
         Class used to calculate statistics of dataset used for neural network model training.
         Args:
