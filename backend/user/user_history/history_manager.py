@@ -8,7 +8,8 @@ def save_history(req_body):
         history = History(req_body["user_id"], req_body["channel_view_count"], req_body["channel_elapsed_time"],
                           req_body["channel_video_count"], req_body["channel_subscriber_count"],
                           req_body["channel_comment_count"], req_body["video_category_id"], req_body["likes"],
-                          req_body["dislikes"], req_body["comments"], req_body["elapsed_time"], date)
+                          req_body["dislikes"], req_body["comments"], req_body["elapsed_time"], date,
+                          req_body['predicted_views'])
         history.save()
         return {"message": "Successfully saved history", "status_code": 201}
     except ValueError:
