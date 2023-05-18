@@ -24,7 +24,7 @@ def test(data: Dict):
 
     net = VideoViewsPredictor(11)
     trainer = VideoViewsPredictorTrainer(net, StandardScaler())
-    file = os.path.join(pathlib.Path(__file__).parent, "30000.pt")
+    file = os.path.join(pathlib.Path(__file__).parent, "result_model.pt")
 
     trainer.load(file)
 
