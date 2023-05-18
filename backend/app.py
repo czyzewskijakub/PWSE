@@ -2,16 +2,15 @@
 import json
 import os
 
-from flask import Flask, make_response, jsonify, request
+from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException
-from backend.user.jwt.request_filter import validate
 from backend.extensions import db
 from flask_cors import CORS
 
 from backend import user
 from backend.ai import views
 
-def create_app(config_object="settings"):
+def create_app(config_object="backend.settings"):
     app = Flask(import_name=__name__)
     app.config.from_object(obj=config_object)
     register_extensions(app=app)

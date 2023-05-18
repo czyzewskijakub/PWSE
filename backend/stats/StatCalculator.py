@@ -1,11 +1,12 @@
 import os
+import pathlib
 
 import pandas as pd
 
 
 class StatCalculator:
 
-    def __init__(self, data=os.getcwd() + "/ai/data/data.csv", **kwargs) -> None:
+    def __init__(self, data=os.path.join(pathlib.Path(__file__).parent.parent.joinpath("ai").joinpath("data"), "data.csv"), **kwargs) -> None:
         f"""
         Class used to calculate statistics of dataset used for neural network model training.
         Args:
