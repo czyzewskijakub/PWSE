@@ -16,9 +16,10 @@ class History(db.Model):
     comments = db.Column(db.Float, unique=False)
     elapsed_time = db.Column(db.Float, unique=False)
     video_published = db.Column(db.DateTime, unique=False)
+    predicted_views = db.Column(db.Integer, unique=False)
 
     def __init__(self, user_id, channel_view_count, channel_elapsed_time, video_count, subscriber_count, channel_comment_count,
-                 video_category_id, likes, dislikes, comments, elapsed_time, video_published):
+                 video_category_id, likes, dislikes, comments, elapsed_time, video_published,predicted_views):
         self.user_id = user_id
         self.channel_view_count = channel_view_count
         self.channel_elapsed_time = channel_elapsed_time
@@ -31,6 +32,7 @@ class History(db.Model):
         self.comments = comments
         self.elapsed_time = elapsed_time
         self.video_published = video_published
+        self.predicted_views = predicted_views
 
     def to_dict(self):
         return {
@@ -44,7 +46,8 @@ class History(db.Model):
             'dislikes': self.dislikes,
             'comments': self.comments,
             'elapsed_time': self.elapsed_time,
-            'video_published': self.video_published.strftime('%Y-%m-%d %H:%M:%S')
+            'video_published': self.video_published.strftime('%Y-%m-%d %H:%M:%S'),
+            'predicted_views': self.predicted_views
         }
     @classmethod
     def find_all_by_id(cls, record_id):
