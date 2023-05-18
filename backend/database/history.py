@@ -34,6 +34,7 @@ class History(db.Model):
 
     def to_dict(self):
         return {
+            'history_id': self.id,
             'channel_view_count': self.channel_view_count,
             'channel_elapsed_time': self.channel_elapsed_time,
             'video_count': self.video_count,
