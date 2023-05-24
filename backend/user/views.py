@@ -60,7 +60,6 @@ def save():
     response = history_manager.save_history(req_body=req_body)
     return jsonify_response(response)
 
-
 @user_bp.route("/history/get", methods=["GET"])
 def get_history_prediction():
     user_id = request.args.get('user_id')
