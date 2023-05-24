@@ -80,4 +80,4 @@ class TestPredictions(TestCase):
             "video_published": "2023-06-04",
         }
         req = '/ai/predict'
-        self.assertIsInstance(self.client.post(req, json=request_body).json['views'], int)
+        self.assertIsInstance(self.client.post(req, json=request_body, headers=self.headers).json['views'], int)

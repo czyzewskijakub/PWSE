@@ -19,6 +19,7 @@ if __name__ == "__main__":
 
     suite.addTest(TestPredictions("test_should_return_ok_on_prediction"))
     suite.addTest(TestPredictions("test_should_return_unauthorized_on_prediction"))
+    suite.addTest(TestPredictions("test_should_return_predictions_as_number"))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)
