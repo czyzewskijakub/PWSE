@@ -28,3 +28,7 @@ class TestStats(TestCase):
 
         self.assertEqual(res['VideoCommentCount']['min'], 20)
         self.assertEqual(res['VideoCommentCount']['max'], 30)
+
+    def test_should_return_ok_on_stats(self):
+        req = '/ai/statistics/describe'
+        self.assertEqual(self.client.get(req).status_code, 200)
