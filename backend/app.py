@@ -2,13 +2,15 @@
 import json
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
 from backend.extensions import db
 from flask_cors import CORS
 
 from backend import user
 from backend.ai import views
+from backend.user.jwt.request_filter import validate
+
 
 def create_app(config_object="backend.settings"):
     app = Flask(import_name=__name__)
@@ -17,6 +19,7 @@ def create_app(config_object="backend.settings"):
     register_blueprints(app=app)
     register_error_handlers(app=app)
     set_headers(app=app)
+    register_request_filter(app=app)
     return app
 
 
@@ -50,6 +53,15 @@ def set_headers(app):
         response.headers.add('Access-Control-Allow-Origin', "*")
 
         return response
+
+def register_request_filter(app):
+    """All routes that require authorization should be placed in here"""
+    request_paths = ["/ai/statistics/describe", "/ai/predict"]
+
+    @app.before_request
+    def filter_specific_routes():
+        if request.path in request_paths:
+            validate(config=app.config)
 
 
 if __name__ == "__main__":
