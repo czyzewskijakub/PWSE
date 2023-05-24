@@ -15,8 +15,10 @@ if __name__ == "__main__":
     suite.addTest(TestStats("test_returns_stats_for_music_category"))
     suite.addTest(TestStats("test_should_filter_music_comments_in_range"))
     suite.addTest(TestStats("test_should_return_ok_on_stats"))
+    suite.addTest(TestStats("test_should_return_unauthorized_on_stats"))
 
     suite.addTest(TestPredictions("test_should_return_ok_on_prediction"))
+    suite.addTest(TestPredictions("test_should_return_unauthorized_on_prediction"))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)

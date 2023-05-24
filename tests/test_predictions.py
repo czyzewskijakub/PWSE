@@ -48,6 +48,23 @@ class TestPredictions(TestCase):
         req = '/ai/predict'
         self.assertEqual(self.client.post(req, json=request_body, headers=self.headers).status_code, 200)
 
+    def test_should_return_unauthorized_on_prediction(self):
+        request_body = {
+            "channel_view_count": 123,
+            "channel_elapsed_time": 123,
+            "channel_video_count": 123,
+            "channel_subscriber_count": 123,
+            "channel_comment_count": 123,
+            "likes": 123,
+            "video_categoryId": 1,
+            "dislikes": 123,
+            "comments": 123,
+            "elapsed_time": 123,
+            "video_published": "2023-06-04",
+        }
+        req = '/ai/predict'
+        self.assertEqual(self.client.post(req, json=request_body).status_code, 401)
+
     def test_should_return_predictions_as_number(self):
         request_body = {
             "channel_view_count": 123,
