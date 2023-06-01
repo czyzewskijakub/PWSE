@@ -63,7 +63,7 @@ def get_user_data(email):
 
 
 def sufficient_password(password: str):
-    password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-    if re.match(password_regex, password):
-        return True
-    return False
+    if len(password) < 8 or not re.search(r'[A-Z]', password) or not re.search(r'[a-z]', password) or not re.search(r'\d', password)\
+            or not re.search(r'[!@#$%^&*()\-=_+[\]{};:\'"<>?,./|\\]', password):
+        return False
+    return True
